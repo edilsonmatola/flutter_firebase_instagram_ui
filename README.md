@@ -1,7 +1,11 @@
 # instagram
 
 Flutter & Firebase Instagram User Interface.
-Credits: [FreeCodeCaamp](https://www.youtube.com/watch?v=mEPm9w5QlJM&list=PLNyf6jIZ5e7cdWB0lIk3EL7GXgaOtLcfF&index=31)
+
+Credits:
+
+- [FreeCodeCamp](https://github.com/freeCodeCamp)
+- [Tutorial](https://www.youtube.com/watch?v=mEPm9w5QlJM&list=PLNyf6jIZ5e7cdWB0lIk3EL7GXgaOtLcfF&index=31)
 
 ## Getting Started
 
