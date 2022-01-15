@@ -1,7 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 
+import '../resources/auth_methods.dart';
 import '../utils/colors_util.dart';
+import '../utils/util.dart';
 import '../widgets/text_field_input.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -16,6 +21,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  Uint8List? _profileImage;
 
 // Clear of the controllers as soons as they are not needed (removes junk frame)
   @override
@@ -25,6 +31,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _passwordController.dispose();
     _bioController.dispose();
     _usernameController.dispose();
+  }
+
+  Future<void> selectImage() async {
+    final image = await pickImage(ImageSource.gallery);
+    setState(() {
+      _profileImage = image;
+    });
   }
 
   @override
@@ -50,16 +63,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
               // Circluar widget to accept and show selected file
               Stack(
                 children: [
-                  CircleAvatar(
-                    radius: 64,
-                    backgroundImage: NetworkImage(
-                        'https://www.thebalance.com/thmb/NQJ2IOS_Xhnx96h8DfCy3EpyGYc=/2578x2578/smart/filters:no_upscale()/couple-talking-to-bank-employee-about-loan-638070380-5bd22d2cc9e77c00514fc7ef.jpg'),
-                  ),
+                  if (_profileImage != null)
+                    CircleAvatar(
+                      radius: 64,
+                      backgroundImage: MemoryImage(
+                        _profileImage!,
+                      ),
+                    )
+                  else
+                    CircleAvatar(
+                      radius: 64,
+                      backgroundImage: NetworkImage(
+                        'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg',
+                      ),
+                    ),
                   Positioned(
                     bottom: -10,
                     left: 80,
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: selectImage,
                       icon: const Icon(
                         Icons.add_a_photo,
                       ),
@@ -111,22 +133,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 24,
               ),
               // Button
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                ),
-                decoration: const ShapeDecoration(
-                  color: blueColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(4),
+              InkWell(
+                onTap: () async {
+                  final result = await AuthMethods().signUpUser(
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                    username: _usernameController.text,
+                    bio: _bioController.text,
+                    profilePicture: _profileImage!,
+                  );
+                  debugPrint(result);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                  ),
+                  decoration: const ShapeDecoration(
+                    color: blueColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(4),
+                      ),
                     ),
                   ),
-                ),
-                alignment: Alignment.center,
-                width: double.infinity,
-                child: Text(
-                  'Sign up',
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  child: Text(
+                    'Sign up',
+                  ),
                 ),
               ),
               const SizedBox(
