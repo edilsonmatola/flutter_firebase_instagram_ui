@@ -1,6 +1,31 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'layout/mobile_screen_layout.dart';
+import 'layout/responsive_screen_layout.dart';
+import 'layout/web_screen_layout.dart';
+import 'utils/colors_util.dart';
+
+Future<void> main() async {
+// !Making sure to initialize the Flutter widgets before anything
+  WidgetsFlutterBinding.ensureInitialized();
+  // kIsWeb is a constant that is true if the application was compiled to run on the web.
+  if (kIsWeb) {
+    // *Initializing Firebase for web
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: 'AIzaSyCBpXigsnj9wN2PHqa7pq50mJ8mQnR3JD0',
+          appId: '1:443107625071:web:ee34a0ad55d1bafda3e59a',
+          messagingSenderId: '443107625071',
+          projectId: 'instagram-1f034',
+          storageBucket: 'instagram-1f034.appspot.com'),
+    );
+  } else {
+    // *Initializing Firebase for mobile
+    await Firebase.initializeApp();
+  }
+
   runApp(const MyApp());
 }
 
@@ -10,57 +35,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // Removing debug banner
+      debugShowCheckedModeBanner: false,
       title: 'Instagram Clone',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      // Kepping all dark colors in the Theme
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: mobileBackgroundColor,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      home: const ResponsiveScreenLayout(
+        webScreenLayout: WebScreenLayout(),
+        mobileScreenLayout: MobileScreenLayout(),
       ),
     );
   }
