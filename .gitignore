@@ -45,6 +45,7 @@ linked_*.ds
 unlinked.ds
 unlinked_spec.ds
 .flutter-plugins-dependencies
+generated_plugin_registrant.dart
 
 # Android related
 **/android/**/gradle-wrapper.jar
