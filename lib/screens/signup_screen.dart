@@ -70,6 +70,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(
                 height: 18,
               ),
+              // TODO: Implementar helpers para textfields
+              // TODO: Hide/Show password option
+              // TODO: Criar issues em relacao as modificacoes que quero
+              // TODO: Criar project para Beta-X para eles ja estarem prontos ao job
               // *Username field
               TextFieldInput(
                 textEditingController: _emailController,
