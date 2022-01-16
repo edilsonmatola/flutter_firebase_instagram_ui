@@ -33,10 +33,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _usernameController.dispose();
   }
 
-  Future<void> selectImage() async {
-    final image = await pickImage(ImageSource.gallery);
+  Future<void> selectProfileImage() async {
+    final profilePicture = await pickImage(ImageSource.gallery);
     setState(() {
-      _profileImage = image;
+      _profileImage = profilePicture;
     });
   }
 
@@ -81,7 +81,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     bottom: -10,
                     left: 80,
                     child: IconButton(
-                      onPressed: selectImage,
+                      onPressed: selectProfileImage,
                       icon: const Icon(
                         Icons.add_a_photo,
                       ),
