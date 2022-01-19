@@ -22,6 +22,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   Uint8List? _profileImage;
+  bool _isLoading = false;
 
 // Clear of the controllers as soons as they are not needed (removes junk frame)
   @override
@@ -38,6 +39,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
     setState(() {
       _profileImage = profilePicture;
     });
+  }
+
+  Future<void> signUpUser() async {
+    setState(
+      () {
+        _isLoading = true;
+      },
+    );
+    final result = await AuthMethods().signUpUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+      username: _usernameController.text,
+      bio: _bioController.text,
+      profilePicture: _profileImage!,
+    );
+
+    if (result != 'Registered successfully.') {
+      showSnackBar(result, context);
+    }
+
+    setState(
+      () {
+        _isLoading = false;
+      },
+    );
   }
 
   @override
@@ -98,8 +124,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               // TODO: Criar project para Beta-X para eles ja estarem prontos ao job
               // *Username field
               TextFieldInput(
-                textEditingController: _emailController,
-                hintText: 'Email',
+                textEditingController: _usernameController,
+                hintText: 'Username',
                 textInputType: TextInputType.emailAddress,
               ),
               const SizedBox(
@@ -107,8 +133,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               // *Email field
               TextFieldInput(
-                textEditingController: _usernameController,
-                hintText: 'Enter your username',
+                textEditingController: _emailController,
+                hintText: 'Email',
                 textInputType: TextInputType.text,
               ),
               const SizedBox(
@@ -117,7 +143,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               TextFieldInput(
                 isPassword: true,
                 textEditingController: _passwordController,
-                hintText: 'Enter your assword',
+                hintText: 'Enter your password',
                 textInputType: TextInputType.text,
               ),
               const SizedBox(
@@ -134,16 +160,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               // Button
               InkWell(
-                onTap: () async {
-                  final result = await AuthMethods().signUpUser(
-                    email: _emailController.text,
-                    password: _passwordController.text,
-                    username: _usernameController.text,
-                    bio: _bioController.text,
-                    profilePicture: _profileImage!,
-                  );
-                  debugPrint(result);
-                },
+                onTap: signUpUser,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     vertical: 12,
@@ -158,9 +175,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   alignment: Alignment.center,
                   width: double.infinity,
-                  child: Text(
-                    'Sign up',
-                  ),
+                  child: _isLoading
+                      ? Center(
+                          child: const CircularProgressIndicator(
+                            color: primaryColor,
+                          ),
+                        )
+                      : const Text(
+                          'Sign up',
+                        ),
                 ),
               ),
               const SizedBox(
