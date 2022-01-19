@@ -16,3 +16,17 @@ Future<Uint8List?> pickImage(ImageSource imageSource) async {
   }
   debugPrint('No image selected');
 }
+
+// Function to show snackbar message
+dynamic showSnackBar(String content, BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        content,
+        style: TextStyle(
+          fontSize: 16,
+        ),
+      ),
+    ),
+  );
+}
