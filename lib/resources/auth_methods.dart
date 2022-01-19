@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import 'storage_methods.dart';
 
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -28,6 +29,13 @@ class AuthMethods {
           password: password,
         );
         debugPrint(credential.user!.uid);
+
+        final photoUrl = await StorageMethods().uploadImageToStorage(
+          'profilePictures',
+          profilePicture,
+          false,
+        );
+
         // Add user to Firestore Database
         await _firestore.collection('users').doc(credential.user!.uid).set(
           {
@@ -37,12 +45,19 @@ class AuthMethods {
             'bio': bio,
             'followers': [],
             'following': [],
+            'photoUrl': photoUrl,
           },
         );
-        result = 'Success';
+        result = 'Registered successfully.';
       }
-    } catch (err) {
-      result = err.toString();
+    } on FirebaseAuthException catch (error) {
+      if (error.code == 'invalid-email') {
+        result = 'The email is badly formatted.';
+      } else if (error.code == 'weak-password') {
+        result = 'Your password should be at least 6 characters.';
+      }
+    } catch (error) {
+      result = error.toString();
     }
     // await _firestore.collection('users').add(data)
     return result;
