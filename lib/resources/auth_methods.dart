@@ -62,4 +62,35 @@ class AuthMethods {
     // await _firestore.collection('users').add(data)
     return result;
   }
+
+  //* Loggin the user
+  Future<String> loginUser({
+    required String email,
+    required String password,
+  }) async {
+    var result = 'Some error occurred';
+
+    //* Error Handling
+    try {
+      if (email.isNotEmpty || password.isNotEmpty) {
+        // * waits for sign in
+        await _auth.signInWithEmailAndPassword(
+            email: email, password: password);
+        result = 'Successfully logged in!';
+      } else {
+        result = 'Please fill in all fields';
+      }
+    } on FirebaseAuthException catch (error) {
+      // In case the user does not exist or not found
+      if (error.code == 'user-not-found') {
+        result = 'The user was not found';
+        // Wrong password inserted
+      } else if (error.code == 'wrong-password') {
+        result = 'Please insert a valid password';
+      }
+    } catch (error) {
+      result = error.toString();
+    }
+    return result;
+  }
 }

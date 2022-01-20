@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/screens/login_screen.dart';
 import 'package:instagram/screens/signup_screen.dart';
 
 import 'layout/mobile_screen_layout.dart';
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
         webScreenLayout: WebScreenLayout(),
         mobileScreenLayout: MobileScreenLayout(),
       ), */
-      home: SignUpScreen(),
+      home: LoginScreen(),
     );
   }
 }
