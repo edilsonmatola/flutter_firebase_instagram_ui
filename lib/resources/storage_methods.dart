@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,11 +8,11 @@ class StorageMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // * Adding the profile picture (image) to firebase storage
-  Future<String> uploadImageToStorage(
-    String childName,
-    Uint8List file,
-    bool isPost,
-  ) async {
+  Future<String> uploadImageToStorage({
+    required String childName,
+    required Uint8List file,
+    required bool isPost,
+  }) async {
     // * .ref ->  Pointer to the file in our storage (firebase), it can refer to a file that exists or does not exist.
     // * first child -> child is a folder, that can exist or not
     // * second child -> will be the user Id, so we need to get the user ID.

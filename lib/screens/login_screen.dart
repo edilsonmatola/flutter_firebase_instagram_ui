@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:instagram/resources/auth_methods.dart';
-import 'package:instagram/utils/util.dart';
 
+import '../resources/auth_methods.dart';
 import '../utils/colors_util.dart';
+import '../utils/util.dart';
 import '../widgets/text_field_input.dart';
 import 'signup_screen.dart';
 

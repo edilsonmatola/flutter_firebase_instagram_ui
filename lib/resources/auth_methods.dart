@@ -31,9 +31,9 @@ class AuthMethods {
         debugPrint(credential.user!.uid);
 
         final photoUrl = await StorageMethods().uploadImageToStorage(
-          'profilePictures',
-          profilePicture,
-          false,
+          childName: 'profilePictures',
+          file: profilePicture,
+          isPost: false,
         );
 
         // Add user to Firestore Database

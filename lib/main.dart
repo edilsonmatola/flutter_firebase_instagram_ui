@@ -1,12 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:instagram/screens/login_screen.dart';
-import 'package:instagram/screens/signup_screen.dart';
+import 'screens/login_screen.dart';
 
-import 'layout/mobile_screen_layout.dart';
-import 'layout/responsive_screen_layout.dart';
-import 'layout/web_screen_layout.dart';
 import 'utils/colors_util.dart';
 
 Future<void> main() async {
