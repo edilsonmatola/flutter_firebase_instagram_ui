@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../layout/mobile_screen_layout.dart';
+import '../layout/responsive_screen_layout.dart';
+import '../layout/web_screen_layout.dart';
 import '../resources/auth_methods.dart';
 import '../utils/colors_util.dart';
 import '../utils/util.dart';
 import '../widgets/text_field_input.dart';
+import 'login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -56,13 +60,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
 
     if (result != 'Registered successfully.') {
-      showSnackBar(result, context);
+      showSnackBar(content: result, context: context);
+    } else {
+      await Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => const ResponsiveScreenLayout(
+            webScreenLayout: WebScreenLayout(),
+            mobileScreenLayout: MobileScreenLayout(),
+          ),
+        ),
+      );
     }
 
     setState(
       () {
         _isLoading = false;
       },
+    );
+  }
+
+  void navigateToLoginScreen() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const LoginScreen(),
+      ),
     );
   }
 
@@ -120,9 +141,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               // TODO: Implementar helpers para textfields
               // TODO: Hide/Show password option
-              // TODO: Criar issues em relacao as modificacoes que quero
-              // TODO: Criar project para Beta-X para eles ja estarem prontos ao job
-              // *Username field
+              // TODO: Criar issues em relacao as modificacoes que quero              // *Username field
               TextFieldInput(
                 textEditingController: _usernameController,
                 hintText: 'Username',
@@ -207,7 +226,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     width: 4,
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: navigateToLoginScreen,
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Text(

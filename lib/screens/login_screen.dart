@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../layout/mobile_screen_layout.dart';
+import '../layout/responsive_screen_layout.dart';
+import '../layout/web_screen_layout.dart';
 
 import '../resources/auth_methods.dart';
 import '../utils/colors_util.dart';
@@ -38,14 +41,29 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (result == 'Successfully logged in!') {
-      //
+      await Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => const ResponsiveScreenLayout(
+            webScreenLayout: WebScreenLayout(),
+            mobileScreenLayout: MobileScreenLayout(),
+          ),
+        ),
+      );
     } else {
       //
-      showSnackBar(result, context);
+      showSnackBar(content: result, context: context);
     }
     setState(() {
       _isLoading = false;
     });
+  }
+
+  void navigateToSignUpScreen() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const SignUpScreen(),
+      ),
+    );
   }
 
   @override
@@ -136,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: 4,
                   ),
                   GestureDetector(
-                    onTap: () => const SignUpScreen(),
+                    onTap: navigateToSignUpScreen,
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Text(
