@@ -3,11 +3,20 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import '../models/user_model.dart';
 import 'storage_methods.dart';
 
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<UserModel> getUserDetail() async {
+    final currentUser = _auth.currentUser!;
+    final snapshot =
+        await _firestore.collection('users').doc(currentUser.uid).get();
+
+    return UserModel.fromSnapshot(snapshot);
+  }
 
   // Sign up user in the firebase
   Future<String> signUpUser({
@@ -36,18 +45,21 @@ class AuthMethods {
           isPost: false,
         );
 
+        final user = UserModel(
+          uid: credential.user!.uid,
+          username: username,
+          email: email,
+          bio: bio,
+          photoUrl: photoUrl,
+          followers: [],
+          following: [],
+        );
+
         // Add user to Firestore Database
         await _firestore.collection('users').doc(credential.user!.uid).set(
-          {
-            'username': username,
-            'uid': credential.user!.uid,
-            'password': password,
-            'bio': bio,
-            'followers': [],
-            'following': [],
-            'photoUrl': photoUrl,
-          },
-        );
+              user.toJson(),
+            );
+
         result = 'Registered successfully.';
       }
     } on FirebaseAuthException catch (error) {
