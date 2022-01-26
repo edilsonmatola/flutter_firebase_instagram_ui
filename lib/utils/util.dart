@@ -18,7 +18,7 @@ Future<Uint8List?> pickImage(ImageSource imageSource) async {
 }
 
 // Function to show snackbar message
-dynamic showSnackBar(String content, BuildContext context) {
+dynamic showSnackBar({required String content, required BuildContext context}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(
