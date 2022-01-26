@@ -1,8 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'screens/login_screen.dart';
+import 'package:provider/provider.dart';
 
+import 'Providers/user_provider.dart';
+import 'layout/mobile_screen_layout.dart';
+import 'layout/responsive_screen_layout.dart';
+import 'layout/web_screen_layout.dart';
+import 'screens/login_screen.dart';
 import 'utils/colors_util.dart';
 
 Future<void> main() async {
@@ -30,21 +36,54 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+//* This widget is the root of the application
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // Removing debug banner
-      debugShowCheckedModeBanner: false,
-      title: 'Instagram Clone',
-      // Kepping all dark colors in the Theme
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: mobileBackgroundColor,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => UserProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        // Removing debug banner
+        debugShowCheckedModeBanner: false,
+        title: 'Instagram Clone',
+        // Kepping all dark colors in the Theme
+        theme: ThemeData.dark().copyWith(
+          scaffoldBackgroundColor: mobileBackgroundColor,
+        ),
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance
+              .authStateChanges(), //* User signed in or out
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.hasData) {
+                // The user has been authenticated
+                return const ResponsiveScreenLayout(
+                  webScreenLayout: WebScreenLayout(),
+                  mobileScreenLayout: MobileScreenLayout(),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    '${snapshot.error}', //Some error occured has an error
+                  ),
+                );
+              }
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: primaryColor,
+                ),
+              );
+            }
+            //* If it hasn't any data the user needs to login
+            return const LoginScreen();
+          },
+        ),
       ),
-      /* home: const ResponsiveScreenLayout(
-        webScreenLayout: WebScreenLayout(),
-        mobileScreenLayout: MobileScreenLayout(),
-      ), */
-      home: LoginScreen(),
     );
   }
 }
