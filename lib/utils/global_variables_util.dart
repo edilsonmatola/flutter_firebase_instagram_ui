@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+
 import '../screens/add_post_screen.dart';
+import '../screens/feed_screen.dart';
+
 // Web Width Size
 const webScreenSize = 600;
 const homeScreenItems = [
-  Center(
-    child: Text('Feed'),
-  ),
+  FeedScreen(),
   Center(
     child: Text('Search'),
   ),
