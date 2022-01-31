@@ -1,15 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../utils/colors_util.dart';
+import 'package:provider/provider.dart';
 
-class PostCard extends StatelessWidget {
+import '../Providers/user_provider.dart';
+import '../utils/colors_util.dart';
+import 'like_animation.dart';
+
+class PostCard extends StatefulWidget {
   const PostCard({Key? key, required this.snap}) : super(key: key);
 
   final snap;
 
   @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
+  bool isLikeAnimating = false;
+
+  @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).getUser;
     return Container(
       color: mobileBackgroundColor,
       padding: EdgeInsets.symmetric(vertical: 10),
@@ -28,7 +40,7 @@ class PostCard extends StatelessWidget {
                 CircleAvatar(
                   radius: 16,
                   backgroundImage: NetworkImage(
-                    snap['profileImage'].toString(),
+                    widget.snap['profileImage'].toString(),
                   ),
                 ),
                 Expanded(
@@ -39,7 +51,7 @@ class PostCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          snap['username'].toString(),
+                          widget.snap['username'].toString(),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -84,12 +96,43 @@ class PostCard extends StatelessWidget {
             ),
           ),
           // * ===== IMAGE SECTION ========
-          SizedBox(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height * .35,
-            child: Image.network(
-              snap['postUrl'].toString(),
-              fit: BoxFit.cover,
+          GestureDetector(
+            onDoubleTap: () {
+              setState(() {
+                isLikeAnimating = true;
+              });
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height * .35,
+                  child: Image.network(
+                    widget.snap['postUrl'].toString(),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                // Like Animation Effect
+                AnimatedOpacity(
+                  opacity: isLikeAnimating ? 1 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: LikeAnimation(
+                    duration: const Duration(milliseconds: 400),
+                    onEnd: () {
+                      setState(() {
+                        isLikeAnimating = false;
+                      });
+                    },
+                    isAnimating: isLikeAnimating,
+                    child: const Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                      size: 120,
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
 
@@ -97,11 +140,15 @@ class PostCard extends StatelessWidget {
           Row(
             children: [
               // * Like
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.favorite,
-                  color: Colors.red,
+              LikeAnimation(
+                isAnimating: widget.snap['likes'].contains(user.uid) as bool,
+                smallLike: true,
+                child: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.favorite,
+                    color: Colors.red,
+                  ),
                 ),
               ),
               // * Comment
@@ -142,13 +189,13 @@ class PostCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.subtitle2!.copyWith(
                         fontWeight: FontWeight.w800,
                       ),
-                  child: snap['likes'].length == 1
+                  child: widget.snap['likes'].length == 1
                       ? Text(
-                          "${snap['likes'].length.toString()} like",
+                          "${widget.snap['likes'].length.toString()} like",
                           style: Theme.of(context).textTheme.bodyText2,
                         )
                       : Text(
-                          "${snap['likes'].length.toString()} likes",
+                          "${widget.snap['likes'].length.toString()} likes",
                           style: Theme.of(context).textTheme.bodyText2,
                         ),
                 ),
@@ -162,13 +209,13 @@ class PostCard extends StatelessWidget {
                       ),
                       children: [
                         TextSpan(
-                          text: snap['username'].toString(),
+                          text: widget.snap['username'].toString(),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         TextSpan(
-                          text: ' ${snap['description'].toString()}',
+                          text: ' ${widget.snap['description'].toString()}',
                         ),
                       ],
                     ),
@@ -192,7 +239,7 @@ class PostCard extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 4),
                   child: Text(
                     DateFormat.yMMMd().format(
-                      (snap['datePublished'] as Timestamp).toDate(),
+                      (widget.snap['datePublished'] as Timestamp).toDate(),
                     ),
                     style: const TextStyle(
                       color: secondaryColor,
