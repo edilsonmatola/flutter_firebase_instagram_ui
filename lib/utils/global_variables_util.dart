@@ -5,7 +5,7 @@ import '../screens/feed_screen.dart';
 
 // Web Width Size
 const webScreenSize = 600;
-const homeScreenItems = [
+List<Widget> homeScreenItems = [
   FeedScreen(),
   Center(
     child: Text('Search'),
