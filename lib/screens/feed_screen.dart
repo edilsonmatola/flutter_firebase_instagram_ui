@@ -42,6 +42,7 @@ class FeedScreen extends StatelessWidget {
           // TODO: Futuramente colocar um refresh indicator caso o user faça um scroll ate o final da lista de cima.
           // TODO: New post t refresh indicator pop-up to refresh to the new posts recently added
           return ListView.builder(
+            physics: const BouncingScrollPhysics(),
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) => PostCard(
               key: UniqueKey(),
