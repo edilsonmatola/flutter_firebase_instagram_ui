@@ -51,7 +51,9 @@ cd flutter_firebase_instagram_ui
 4. Enable Authentication
 5. Make Firestore Rules
 6. Create Android, iOS & Web Apps
-7. Take Web FirebaseOptions and put it in main function in main.dart file replacing my keys (My keys wont work as I deleted my project) Then **run the following commands to run your app:**
+7. Take Web FirebaseOptions and put it in main function in main.dart file replacing my keys (My keys wont work as I deleted my project.)
+
+### 8. To run the app, simply write the following commands:
 
 ```bash
 flutter pub get
