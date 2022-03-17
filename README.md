@@ -33,7 +33,7 @@ A completely Responsive Instagram App - Works on **Android, iOS & Web!**
 
 1. [Uuid](https://pub.dev/packages/Uuid)
 
-## Setup
+## Installation
 
 ##### 1. Clone the repository
 
@@ -55,6 +55,7 @@ cd flutter_firebase_instagram_ui
 
 ```bash
 flutter pub get
+# flutter emulators --launch "emulator_id" (to get Android Simulator)
 open -a simulator (to get iOS Simulator)
 flutter run
 flutter run -d chrome --web-renderer html (to see the best output)
